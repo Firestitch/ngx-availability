@@ -61,6 +61,7 @@
     "@firestitch/prompt": "^8.4.5",
     "@firestitch/scroll": "^8.0.0",
     "@firestitch/store": "^8.1.2",
+    "@firestitch/style": "^12.0.0",
     "@firestitch/autocomplete-chips": "^8.3.4",
     "@firestitch/list": "^9.12.2",
     "@firestitch/filter": "^9.9.7",
