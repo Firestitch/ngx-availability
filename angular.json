@@ -24,23 +24,18 @@
             "tsConfig": "playground/tsconfig.app.json",
             "assets": [
               "playground/favicon.ico",
-              "playground/assets",
-              { "glob": "**/*", "input": "./src/app/assets", "output": "./assets/@firestitch/device" },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@firestitch/country/assets",
-                "output": "assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/country-flag-icons/3x2",
-                "output": "assets/country-flags/"
-              }
+              "playground/assets"
             ],
             "styles": [
               "playground/styles.scss"
             ],
             "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
             "allowedCommonJsDependencies": [
               "highlight.js"
             ]

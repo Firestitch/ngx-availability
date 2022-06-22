@@ -1,0 +1,69 @@
+<div  
+    class="day-row" 
+    *ngFor="let day of days">  
+  <mat-checkbox
+    [name]="'selectedDay' + day"
+    [(ngModel)]="dayAvailabilities[day].selected"
+    (ngModelChange)="change()">
+  </mat-checkbox>
+  <a  
+      class="day"
+      (click)="dayClick(day)">
+    {{Days[day]}}
+  </a>
+  <div>
+    <div 
+        class="time-row"
+        *ngFor="let time of dayAvailabilities[day].times; let index = index"
+        [ngClass]="{ 
+          hidden: !dayAvailabilities[day].selected,
+          none: !dayAvailabilities[day].selected && index > 0
+        }">
+      <mat-form-field 
+          [ngClass]="{ hidden: !dayAvailabilities[day].selected }"
+          class="time">
+        <mat-select
+            [fsFormRequired]="!!dayAvailabilities[day].selected"
+            [name]="'startDayTime' + index + day"
+            [(ngModel)]="time.start"
+            (ngModelChange)="change()">
+          <mat-option
+            *ngFor="let time of times"
+            [value]="time.minutes">
+              {{ time.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div 
+          class="to">
+        to
+      </div>
+      <mat-form-field 
+          class="time">
+        <mat-select
+            [fsFormRequired]="!!dayAvailabilities[day].selected"
+            [name]="'endDayTime' + index + day"
+            [(ngModel)]="time.end"
+            (ngModelChange)="change()">
+          <mat-option
+            *ngFor="let time of times"
+            [value]="time.minutes">
+              {{ time.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <a  
+          *ngIf="index === 0"
+          class="action"
+          (click)="timeAdd(day)">
+        <mat-icon>add</mat-icon>
+      </a>
+      <a  
+          *ngIf="index !== 0"
+          class="action"
+          (click)="timeDelete(day, index)">
+        <mat-icon>delete_outline</mat-icon>
+      </a>      
+    </div>
+  </div>
+</div>  

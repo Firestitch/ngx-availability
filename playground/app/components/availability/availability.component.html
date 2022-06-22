@@ -1,0 +1,11 @@
+<form fsForm [submit]="submit">
+  <fs-availability
+    [availabilities]="availabilities"
+    (availabilitiesChange)="availabilitiesChange($event)">
+  </fs-availability>
+
+  <button
+      mat-raised-button>
+    Save
+  </button>
+</form>

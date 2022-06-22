@@ -1,0 +1,37 @@
+.day {
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  margin-left: 15px;
+  width: 90px;
+}
+
+.time {
+  width: 100px;
+}
+
+.to {
+  padding: 0 15px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+
+  &.none {
+    display: none;
+  }
+}
+
+.day-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.action {
+  margin-left: 10px;
+}

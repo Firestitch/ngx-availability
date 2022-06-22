@@ -6,21 +6,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
-import { FsDeviceModule } from '@firestitch/device';
+import { FsAvailabilityModule } from '@firestitch/availability';
 import { FsLabelModule } from '@firestitch/label';
-import { FsFormModule } from '@firestitch/form';
 import { FsStoreModule } from '@firestitch/store';
+import { FsFormModule } from '@firestitch/form';
 
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
 import {
-  KitchenSinkComponent,
   ExamplesComponent
 } from './components';
 import { AppComponent } from './app.component';
-import { DeviceBrowserComponent } from './components/device-browser';
-import { DeviceOsComponent } from './components/device-os';
+import { AvailabilityComponent } from './components/availability';
+import { FsDatePickerModule } from '@firestitch/datepicker';
+
 
 const routes: Routes = [
   { path: '', component: ExamplesComponent },
@@ -30,13 +30,14 @@ const routes: Routes = [
   bootstrap: [ AppComponent ],
   imports: [
     BrowserModule,
-    FsDeviceModule.forRoot(),
+    FsAvailabilityModule,
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
     FsLabelModule,
-    // FsFormModule,
     FsStoreModule,
+    FsFormModule,
+    FsDatePickerModule.forRoot(),
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
@@ -45,9 +46,7 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ExamplesComponent,
-    // KitchenSinkComponent,
-    DeviceBrowserComponent,
-    DeviceOsComponent,
+    AvailabilityComponent,
   ],
 })
 export class PlaygroundModule {
