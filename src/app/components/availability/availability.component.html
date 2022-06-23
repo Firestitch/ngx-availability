@@ -4,7 +4,7 @@
   <mat-checkbox
     [name]="'selectedDay' + day"
     [(ngModel)]="dayAvailabilities[day].selected"
-    (ngModelChange)="change()">
+    (ngModelChange)="selectedClick()">
   </mat-checkbox>
   <a  
       class="day"
@@ -23,14 +23,16 @@
           [ngClass]="{ hidden: !dayAvailabilities[day].selected }"
           class="time">
         <mat-select
+            #startSelect
+            (openedChange)="openedChangeStart($event, startSelect, time)"
             [fsFormRequired]="!!dayAvailabilities[day].selected"
             [name]="'startDayTime' + index + day"
             [(ngModel)]="time.start"
-            (ngModelChange)="change()">
+            (ngModelChange)="changeStart(time)">
           <mat-option
-            *ngFor="let time of times"
-            [value]="time.minutes">
-              {{ time.label }}
+              *ngFor="let time of times"
+              [value]="time.minutes">
+            {{ time.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -41,27 +43,29 @@
       <mat-form-field 
           class="time">
         <mat-select
+            #endSelect
+            (openedChange)="openedChangeEnd($event, endSelect, time)"
             [fsFormRequired]="!!dayAvailabilities[day].selected"
             [name]="'endDayTime' + index + day"
             [(ngModel)]="time.end"
-            (ngModelChange)="change()">
+            (ngModelChange)="changeEnd(time)">
           <mat-option
-            *ngFor="let time of times"
-            [value]="time.minutes">
-              {{ time.label }}
+              *ngFor="let time of times"
+              [value]="time.minutes">
+            {{ time.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <a  
           *ngIf="index === 0"
           class="action"
-          (click)="timeAdd(day)">
+          (click)="timeAddClick(day)">
         <mat-icon>add</mat-icon>
       </a>
       <a  
           *ngIf="index !== 0"
           class="action"
-          (click)="timeDelete(day, index)">
+          (click)="timeDeleteClick(day, index)">
         <mat-icon>delete_outline</mat-icon>
       </a>      
     </div>

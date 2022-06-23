@@ -11,6 +11,7 @@ import { FsDatePickerModule } from '@firestitch/datepicker';
 
 import { FsAvailabilityComponent } from './components/availability/availability.component';
 import { MatSelectModule } from '@angular/material/select';
+import { FsFormModule } from '@firestitch/form';
 
 
 @NgModule({
@@ -22,8 +23,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
-    
 
+    FsFormModule,
     FsDatePickerModule,
   ],
   exports: [

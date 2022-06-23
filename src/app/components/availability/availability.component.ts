@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
 
 import { guid, index } from '@firestitch/common';
 
@@ -20,6 +21,8 @@ import { Availability } from '../../interfaces';
 export class FsAvailabilityComponent implements OnInit {
 
   @Input() public availabilities: Availability[] = [];
+  @Input() public defaultStart = 9 * 60;
+  @Input() public defaultEnd = 17 * 60;
   
   @Output() public availabilitiesChange = new EventEmitter<{ 
     guid?: any,
@@ -41,6 +44,10 @@ export class FsAvailabilityComponent implements OnInit {
       end?: number;
     }[],
   }[] = [];
+
+  public constructor(
+    private _cdRef: ChangeDetectorRef,
+  ) {}
 
   public ngOnInit(): void {
     this.initDays();
@@ -71,17 +78,14 @@ export class FsAvailabilityComponent implements OnInit {
       }
     });
 
-    this.dayAvailabilities = this.dayAvailabilities
-    .map((dayAvailability) => {
-      return { 
-        ...dayAvailability,
-        times: dayAvailability.times.length ? dayAvailability.times : [
-          {
-            guid: guid(),
-          }
-        ],
-      };
+    this.dayAvailabilities.forEach((availability) => {
+      const dayAvailability = this.dayAvailabilities[availability.day];
+      if(!dayAvailability.times.length) {
+        this.addTime(availability.day)    
+      }
     });
+    
+    this._cdRef.detectChanges();
   }
 
   public initDays(): void {
@@ -106,21 +110,32 @@ export class FsAvailabilityComponent implements OnInit {
       date = addMinutes(date, 15);
     } 
   }
+  
+  public addTime(day): void {
+    this.dayAvailabilities[day].times.push({
+      guid: guid(),
+      start: null,
+      end: null,      
+    });
+  }
+
+  public selectedClick(): void {
+    this._cdRef.detectChanges();
+    this.change();
+  }
 
   public dayClick(day): void {
     this.dayAvailabilities[day].selected = !this.dayAvailabilities[day].selected;
+    this._cdRef.detectChanges();
     this.change();
   }
 
-  public timeAdd(day): void {
-    this.dayAvailabilities[day].times.push({
-      guid: guid(),
-    });
-    
+  public timeAddClick(day): void {
+    this.addTime(day);
     this.change();
   }
 
-  public timeDelete(day, index): void {
+  public timeDeleteClick(day, index): void {
     this.dayAvailabilities[day].times = this.dayAvailabilities[day].times
     .filter((_, _index) => {
       return index !== _index;
@@ -148,5 +163,47 @@ export class FsAvailabilityComponent implements OnInit {
     }, []);
 
     this.availabilitiesChange.emit(availabilities);
+  }
+
+  public changeStart(time): void {
+    if(time.start > time.end) {
+      time.end = null;
+    }
+
+    this.change();
+  }
+
+  public changeEnd(time): void {
+    if(time.start > time.end) {
+      time.start = null;
+    }
+
+    this.change();
+  }
+
+  public openedChangeStart(opened, matSelect: MatSelect, time): void {
+    if(opened) {
+      if(!matSelect.value) {
+        const el = matSelect.panel.nativeElement
+        .querySelector(`[ng-reflect-value="${this.defaultStart}"]`);
+
+        if(el) {
+          el.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+      }
+    }
+  }
+
+  public openedChangeEnd(opened, matSelect: MatSelect, time): void {
+    if(opened) {
+      if(!matSelect.value) {
+        const el = matSelect.panel.nativeElement
+        .querySelector(`[ng-reflect-value="${time.start || this.defaultEnd}"]`);
+
+        if(el) {
+          el.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+      }
+    }
   }
 }
