@@ -23,6 +23,7 @@ export class FsAvailabilityComponent implements OnInit {
   @Input() public availabilities: Availability[] = [];
   @Input() public defaultStart = 9 * 60;
   @Input() public defaultEnd = 17 * 60;
+  @Input() public startDay = Day.Sunday;
   
   @Output() public availabilitiesChange = new EventEmitter<{ 
     guid?: any,
@@ -31,7 +32,6 @@ export class FsAvailabilityComponent implements OnInit {
     end?: number;
   }[]>();
 
-  public startDay = Day.Sunday;
   public times = [];
   public Days = index(Days, 'value', 'name');
   public days = [];
