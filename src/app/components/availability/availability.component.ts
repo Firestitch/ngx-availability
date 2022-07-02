@@ -63,8 +63,9 @@ export class FsAvailabilityComponent implements OnInit {
     });
 
     this.availabilities.forEach((availability) => {
-      const dayAvailability = this.dayAvailabilities[availability.day];
-      this.dayAvailabilities[availability.day] = {
+      const dayIndex = this.getDayIndex(availability.day);
+      const dayAvailability = this.dayAvailabilities[dayIndex];
+      this.dayAvailabilities[dayIndex] = {
         ...dayAvailability,
         selected: true,
         times: [
@@ -79,13 +80,18 @@ export class FsAvailabilityComponent implements OnInit {
     });
 
     this.dayAvailabilities.forEach((availability) => {
-      const dayAvailability = this.dayAvailabilities[availability.day];
+      const dayIndex = this.getDayIndex(availability.day);
+      const dayAvailability = this.dayAvailabilities[dayIndex];
       if(!dayAvailability.times.length) {
         this.addTime(availability.day)    
       }
     });
     
     this._cdRef.detectChanges();
+  }
+  
+  public getDayIndex(day) {
+    return this.days.indexOf(day);
   }
 
   public initDays(): void {
@@ -110,9 +116,14 @@ export class FsAvailabilityComponent implements OnInit {
       date = addMinutes(date, 15);
     } 
   }
+
+  public getDayAvailability(day) {
+    return this.dayAvailabilities[this.getDayIndex(day)];
+  }
   
   public addTime(day): void {
-    this.dayAvailabilities[day].times.push({
+    this.getDayAvailability(day)
+    .times.push({
       guid: guid(),
       start: null,
       end: null,      
@@ -125,7 +136,8 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public dayClick(day): void {
-    this.dayAvailabilities[day].selected = !this.dayAvailabilities[day].selected;
+    const dayAvailability = this.getDayAvailability(day);
+    dayAvailability.selected = !dayAvailability.selected;
     this._cdRef.detectChanges();
     this.change();
   }
@@ -136,7 +148,8 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public timeDeleteClick(day, index): void {
-    this.dayAvailabilities[day].times = this.dayAvailabilities[day].times
+    const dayAvailability = this.getDayAvailability(day);
+    dayAvailability.times = dayAvailability.times
     .filter((_, _index) => {
       return index !== _index;
     });
