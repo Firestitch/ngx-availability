@@ -30,7 +30,7 @@
             [(ngModel)]="time.start"
             (ngModelChange)="changeStart(time)">
           <mat-option
-              *ngFor="let time of times"
+              *ngFor="let time of startTimes"
               [value]="time.minutes">
             {{ time.label }}
           </mat-option>
@@ -50,7 +50,7 @@
             [(ngModel)]="time.end"
             (ngModelChange)="changeEnd(time)">
           <mat-option
-              *ngFor="let time of times"
+              *ngFor="let time of endTimes"
               [value]="time.minutes">
             {{ time.label }}
           </mat-option>

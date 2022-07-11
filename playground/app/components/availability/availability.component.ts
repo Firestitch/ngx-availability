@@ -59,5 +59,6 @@ export class AvailabilityComponent {
 
   public availabilitiesChange(availabilities) {
     console.log(availabilities);
+    this.availabilities = availabilities;
   }
 }

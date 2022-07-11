@@ -20,9 +20,13 @@ import { Availability } from '../../interfaces';
 })
 export class FsAvailabilityComponent implements OnInit {
 
+  readonly DaySeconds = 60 * 60 * 24;
+
   @Input() public availabilities: Availability[] = [];
-  @Input() public defaultStart = 9 * 60;
-  @Input() public defaultEnd = 17 * 60;
+  @Input() public defaultStart: number = null;
+  @Input() public defaultEnd: number = null;
+  @Input() public defaultStartScrollTo: number = null;
+  @Input() public defaultEndScrollTo: number = null;  
   @Input() public startDay = Day.Sunday;
   
   @Output() public availabilitiesChange = new EventEmitter<{ 
@@ -32,7 +36,8 @@ export class FsAvailabilityComponent implements OnInit {
     end?: number;
   }[]>();
 
-  public times = [];
+  public startTimes = [];
+  public endTimes = [];
   public Days = index(Days, 'value', 'name');
   public days = [];
   public dayAvailabilities: { 
@@ -104,18 +109,42 @@ export class FsAvailabilityComponent implements OnInit {
     }
   }
 
-  public initTimes(): void {
+  public generateTime(): any[] {
     let date = new Date(null);
-    while(getUnixTime(date) <= (60 * 60 * 24)) {
+    const times = [];
+    while(getUnixTime(date) < this.DaySeconds) {
       const minutes = getUnixTime(date) / 60;
-      this.times.push({
-        minutes,
-        label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'), 
-      });
+      if(minutes) {
+        times.push({
+          minutes,
+          label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'), 
+        });
+      }
 
       date = addMinutes(date, 15);
     } 
+
+    return times;
   }
+
+  public initTimes(): void {
+    this.startTimes = [
+      {
+        minutes: 0,
+        label: 'Anytime',
+      },
+      ...this.generateTime()
+    ];
+
+    this.endTimes = [
+      ...this.generateTime(),
+      {
+        minutes: this.DaySeconds - 1,
+        label: 'Anytime',
+      },      
+    ];
+  }
+  
 
   public getDayAvailability(day) {
     return this.dayAvailabilities[this.getDayIndex(day)];
@@ -125,8 +154,8 @@ export class FsAvailabilityComponent implements OnInit {
     this.getDayAvailability(day)
     .times.push({
       guid: guid(),
-      start: null,
-      end: null,      
+      start: this.defaultStart,
+      end: this.defaultEnd,
     });
   }
 
@@ -198,7 +227,7 @@ export class FsAvailabilityComponent implements OnInit {
     if(opened) {
       if(!matSelect.value) {
         const el = matSelect.panel.nativeElement
-        .querySelector(`[ng-reflect-value="${this.defaultStart}"]`);
+        .querySelector(`[ng-reflect-value="${this.defaultStartScrollTo}"]`);
 
         if(el) {
           el.scrollIntoView({ behavior: 'auto', block: 'center' });
@@ -211,7 +240,7 @@ export class FsAvailabilityComponent implements OnInit {
     if(opened) {
       if(!matSelect.value) {
         const el = matSelect.panel.nativeElement
-        .querySelector(`[ng-reflect-value="${time.start || this.defaultEnd}"]`);
+        .querySelector(`[ng-reflect-value="${time.start || this.defaultEndScrollTo}"]`);
 
         if(el) {
           el.scrollIntoView({ behavior: 'auto', block: 'center' });
