@@ -113,10 +113,10 @@ export class FsAvailabilityComponent implements OnInit {
     let date = new Date(null);
     const times = [];
     while(getUnixTime(date) < this.DaySeconds) {
-      const minutes = getUnixTime(date) / 60;
-      if(minutes) {
+      const seconds = getUnixTime(date);
+      if(seconds) {
         times.push({
-          minutes,
+          seconds,
           label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'), 
         });
       }
@@ -130,7 +130,7 @@ export class FsAvailabilityComponent implements OnInit {
   public initTimes(): void {
     this.startTimes = [
       {
-        minutes: 0,
+        seconds: 0,
         label: 'Anytime',
       },
       ...this.generateTime()
@@ -139,13 +139,12 @@ export class FsAvailabilityComponent implements OnInit {
     this.endTimes = [
       ...this.generateTime(),
       {
-        minutes: this.DaySeconds - 1,
+        seconds: this.DaySeconds - 1,
         label: 'Anytime',
       },      
     ];
   }
   
-
   public getDayAvailability(day) {
     return this.dayAvailabilities[this.getDayIndex(day)];
   }

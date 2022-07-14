@@ -14,38 +14,38 @@ export class AvailabilityComponent {
     {
       guid: 1,
       day: 1,
-      start: 9 * 60,
-      end: 12 * 60,
+      start: 9 * 60 * 60,
+      end: 12 * 60 * 60,
     },
     {
       guid: 1,
       day: 1,
-      start: 13 * 60,
-      end: 17 * 60,
+      start: 13 * 60 * 60,
+      end: 17 * 60 * 60,
     },    
     {
       guid: 2,
       day: 2,
-      start: 9 * 60,
-      end: 17 * 60,
+      start: 9 * 60 * 60,
+      end: 17 * 60 * 60,
     },
     {
       guid: 3,
       day: 3,
-      start: 9 * 60,
-      end: 17 * 60,
+      start: 9 * 60 * 60,
+      end: 17 * 60 * 60,
     },
     {
       guid: 4,
       day: 4,
-      start: 9 * 60,
-      end: 17 * 60,
+      start: 9 * 60 * 60,
+      end: 17 * 60 * 60,
     },
     {
       guid: 5,
       day: 5,
-      start: 9 * 60,
-      end: 17 * 60,
+      start: 9 * 60 * 60,
+      end: 17 * 60 * 60,
     }        
   ];
 
