@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
+
 import { MatSelect } from '@angular/material/select';
 
 import { guid, index } from '@firestitch/common';
@@ -26,12 +27,13 @@ export class FsAvailabilityComponent implements OnInit {
   @Input() public defaultStart: number = null;
   @Input() public defaultEnd: number = null;
   @Input() public defaultStartScrollTo: number = null;
-  @Input() public defaultEndScrollTo: number = null;  
+  @Input() public defaultEndScrollTo: number = null;
   @Input() public startDay = Day.Sunday;
-  
-  @Output() public availabilitiesChange = new EventEmitter<{ 
+  @Input() public startDate: Date = null;
+
+  @Output() public availabilitiesChange = new EventEmitter<{
     guid?: any,
-    day?: Day; 
+    day?: Day;
     start?: number;
     end?: number;
   }[]>();
