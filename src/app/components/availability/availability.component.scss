@@ -1,9 +1,22 @@
+.availability {
+  display: inline-block;
+  &:NOT(.has-date) {
+    .day {
+      width: 90px;
+    }
+  }
+}
+
 .day {
   color: inherit;
   cursor: pointer;
   user-select: none;
-  margin-left: 15px;
-  width: 90px;
+  margin: 0 15px;
+  text-align: center;
+  h3 {
+    font-weight: 500;
+    margin: 0;
+  }
 }
 
 .time {

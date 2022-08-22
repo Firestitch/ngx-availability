@@ -5,7 +5,7 @@ import { MatSelect } from '@angular/material/select';
 
 import { guid, index } from '@firestitch/common';
 
-import { addMinutes, format, getUnixTime } from 'date-fns';
+import { addMinutes, format, getUnixTime, startOfWeek, addDays, isSameDay, endOfMonth } from 'date-fns';
 
 import { Days } from '../../consts';
 import { Day } from '../../enums';
@@ -42,8 +42,9 @@ export class FsAvailabilityComponent implements OnInit {
   public endTimes = [];
   public Days = index(Days, 'value', 'name');
   public days = [];
-  public dayAvailabilities: { 
-    day?: Day; 
+  public weekDays: any = [];
+  public dayAvailabilities: {
+    day?: Day;
     selected?: boolean;
     times?: {
       guid?: any,
@@ -54,20 +55,24 @@ export class FsAvailabilityComponent implements OnInit {
 
   public constructor(
     private _cdRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.initDays();
     this.initTimes();
 
+    if (this.startDate) {
+      this.initWeekDays();
+    }
+
     this.dayAvailabilities = this.days
-    .map((day) => {
-      return { 
-        day, 
-        selected: false,
-        times: [],
-      };
-    });
+      .map((day) => {
+        return {
+          day,
+          selected: false,
+          times: [],
+        };
+      });
 
     this.availabilities.forEach((availability) => {
       const dayIndex = this.getDayIndex(availability.day);
@@ -89,14 +94,14 @@ export class FsAvailabilityComponent implements OnInit {
     this.dayAvailabilities.forEach((availability) => {
       const dayIndex = this.getDayIndex(availability.day);
       const dayAvailability = this.dayAvailabilities[dayIndex];
-      if(!dayAvailability.times.length) {
-        this.addTime(availability.day)    
+      if (!dayAvailability.times.length) {
+        this.addTime(availability.day);
       }
     });
-    
+
     this._cdRef.detectChanges();
   }
-  
+
   public getDayIndex(day) {
     return this.days.indexOf(day);
   }
@@ -111,12 +116,39 @@ export class FsAvailabilityComponent implements OnInit {
     }
   }
 
+
+  public initWeekDays(): void {
+    const startWeek = addDays(startOfWeek(this.startDate), this.startDay);
+    this.weekDays = [
+      {
+        date: startWeek,
+      }
+    ];
+
+    for (let i = 1; i < 7; i++) {
+      this.weekDays.push({
+        date: addDays(startWeek, i),
+      });
+    }
+
+    this.weekDays
+      .forEach((item) => {
+        item.isEndOfMonth = isSameDay(
+          item.date,
+          endOfMonth(item.date),
+        );
+        item.monthName = format(item.date, 'MMMM');
+        item.dayOfWeek = format(item.date, 'EEE');
+        item.dayOfMonth = format(item.date, 'dd');
+      });
+  }
+
   public generateTime(): any[] {
     let date = new Date(null);
     const times = [];
-    while(getUnixTime(date) < this.DaySeconds) {
+    while (getUnixTime(date) < this.DaySeconds) {
       const seconds = getUnixTime(date);
-      if(seconds) {
+      if (seconds) {
         times.push({
           seconds,
           label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'), 
@@ -124,7 +156,7 @@ export class FsAvailabilityComponent implements OnInit {
       }
 
       date = addMinutes(date, 15);
-    } 
+    }
 
     return times;
   }
@@ -143,14 +175,14 @@ export class FsAvailabilityComponent implements OnInit {
       {
         seconds: this.DaySeconds - 1,
         label: 'Anytime',
-      },      
+      },
     ];
   }
-  
+
   public getDayAvailability(day) {
     return this.dayAvailabilities[this.getDayIndex(day)];
   }
-  
+
   public addTime(day): void {
     this.getDayAvailability(day)
     .times.push({
@@ -209,7 +241,7 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public changeStart(time): void {
-    if(time.start > time.end) {
+    if (time.start > time.end) {
       time.end = null;
     }
 
@@ -217,7 +249,7 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public changeEnd(time): void {
-    if(time.start > time.end) {
+    if (time.start > time.end) {
       time.start = null;
     }
 
@@ -225,12 +257,12 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public openedChangeStart(opened, matSelect: MatSelect, time): void {
-    if(opened) {
-      if(!matSelect.value) {
+    if (opened) {
+      if (!matSelect.value) {
         const el = matSelect.panel.nativeElement
         .querySelector(`[ng-reflect-value="${this.defaultStartScrollTo}"]`);
 
-        if(el) {
+        if (el) {
           el.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
       }
@@ -238,12 +270,12 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public openedChangeEnd(opened, matSelect: MatSelect, time): void {
-    if(opened) {
-      if(!matSelect.value) {
+    if (opened) {
+      if (!matSelect.value) {
         const el = matSelect.panel.nativeElement
         .querySelector(`[ng-reflect-value="${time.start || this.defaultEndScrollTo}"]`);
 
-        if(el) {
+        if (el) {
           el.scrollIntoView({ behavior: 'auto', block: 'center' });
         }
       }

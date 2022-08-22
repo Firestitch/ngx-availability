@@ -49,6 +49,8 @@ export class AvailabilityComponent {
     }        
   ];
 
+  public date = new Date();
+
   public constructor(
     private _message: FsMessage,
   ) {}
