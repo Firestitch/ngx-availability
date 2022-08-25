@@ -15,9 +15,11 @@
           class="day"
           (click)="dayClick(day)">
         <ng-container *ngIf="!startDate">{{Days[day]}}</ng-container>
-        <div *ngIf="startDate" fxLayout="column">
-          <h3>{{ weekDays[dayIndex].dayOfMonth }}</h3>
-          <span>{{ weekDays[dayIndex].dayOfWeek }}</span>
+        <div 
+            *ngIf="startDate"
+            class="day-month">
+          <div class="day-number">{{ weekDays[dayIndex].dayOfMonth }}</div>
+          <div class="day-name">{{ weekDays[dayIndex].dayOfWeek }}</div>
         </div>
       </a>
       <div>

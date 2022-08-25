@@ -15,6 +15,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
 import {
+  AvailabilityStartDateComponent,
   ExamplesComponent
 } from './components';
 import { AppComponent } from './app.component';
@@ -47,6 +48,7 @@ const routes: Routes = [
     AppComponent,
     ExamplesComponent,
     AvailabilityComponent,
+    AvailabilityStartDateComponent,
   ],
 })
 export class PlaygroundModule {

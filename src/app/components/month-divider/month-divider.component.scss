@@ -1,13 +1,14 @@
 .divider {
   width: 100%; 
   text-align: center; 
-  border-bottom: 1px solid #F2F2F2; 
+  border-bottom: 1px solid #ccc; 
   line-height: 0.1em;
   margin: 10px 0 20px; 
+  font-size: 85%;
 } 
 
 .divider span { 
   background:#fff; 
   padding:0 10px; 
-  color: #F2F2F2;
+  color: #ccc;
 }

@@ -12,10 +12,20 @@
   cursor: pointer;
   user-select: none;
   margin: 0 15px;
-  text-align: center;
-  h3 {
-    font-weight: 500;
-    margin: 0;
+
+  .day-month {
+    width: 30px;
+    text-align: center;
+
+    .day-number {
+      font-weight: bold;
+      font-size: 120%;
+      margin: 0;
+    }
+
+    .day-name {
+      font-size: 90%;
+    }
   }
 }
 
