@@ -54,6 +54,7 @@ export class FsAvailabilityComponent implements OnInit {
   }[] = [];
 
   public constructor(
+    private _form: NgForm,
     private _cdRef: ChangeDetectorRef,
   ) { }
 
@@ -151,7 +152,7 @@ export class FsAvailabilityComponent implements OnInit {
       if (seconds) {
         times.push({
           seconds,
-          label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'), 
+          label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'),
         });
       }
 
@@ -193,20 +194,20 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public selectedClick(): void {
-    this._cdRef.detectChanges();
     this.change();
   }
 
   public dayClick(day): void {
     const dayAvailability = this.getDayAvailability(day);
     dayAvailability.selected = !dayAvailability.selected;
-    this._cdRef.detectChanges();
+
     this.change();
   }
 
   public timeAddClick(day): void {
     this.addTime(day);
     this.change();
+    this._updateValidity();
   }
 
   public timeDeleteClick(day, index): void {
@@ -231,13 +232,13 @@ export class FsAvailabilityComponent implements OnInit {
             guid: time.guid,
             day: dayAvailabiliy.day,
             start: time.start,
-            end: time.end,
           };
         }),
       ];
     }, []);
 
     this.availabilitiesChange.emit(availabilities);
+    this._updateValidity();
   }
 
   public changeStart(time): void {
@@ -280,5 +281,33 @@ export class FsAvailabilityComponent implements OnInit {
         }
       }
     }
+  }
+
+  public validateTime = (formControl, { day, timeIndex }) => {
+    const times = this.dayAvailabilities[day].times;
+    const currentTimeFrame = times[timeIndex];
+
+    if (!currentTimeFrame.start || !currentTimeFrame.end) { return }
+
+    const hasOverlaps = times.some((timeFrame, timeFrameIndex) => {
+      if (timeFrameIndex === timeIndex || !timeFrame.start || !timeFrame.end) { return false }
+
+      return currentTimeFrame.end >= timeFrame.start && timeFrame.end >= currentTimeFrame.start;
+    })
+
+    if (hasOverlaps) {
+      throw new Error('Conflict with another time slot');
+    }
+
+    return false;
+  }
+
+  private _updateValidity(): void {
+    Object.values(this._form.controls)
+      .forEach(control => {
+        control.markAsDirty();
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
   }
 }

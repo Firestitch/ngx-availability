@@ -4,5 +4,6 @@
 @import '~@firestitch/message/styles';
 @import "~@firestitch/drawer/styles";
 @import '../src/app/styles.scss';
+@import '@firestitch/form/styles';
 
 @include fs-drawer($mat-blue);

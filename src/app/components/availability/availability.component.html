@@ -4,18 +4,18 @@
       *ngIf="startDate && dayIndex === 0"
       [monthName]="weekDays[dayIndex].monthName">
     </fs-month-divider>
-    <div  
-        class="day-row">  
+    <div
+        class="day-row">
       <mat-checkbox
         [name]="'selectedDay' + day"
         [(ngModel)]="dayAvailabilities[dayIndex].selected"
         (ngModelChange)="selectedClick()">
       </mat-checkbox>
-      <a  
+      <a
           class="day"
           (click)="dayClick(day)">
         <ng-container *ngIf="!startDate">{{Days[day]}}</ng-container>
-        <div 
+        <div
             *ngIf="startDate"
             class="day-month">
           <div class="day-number">{{ weekDays[dayIndex].dayOfMonth }}</div>
@@ -23,14 +23,14 @@
         </div>
       </a>
       <div>
-        <div 
+        <div
             class="time-row"
             *ngFor="let time of dayAvailabilities[dayIndex].times; let timeIndex = index"
-            [ngClass]="{ 
+            [ngClass]="{
               hidden: !dayAvailabilities[dayIndex].selected,
               none: !dayAvailabilities[dayIndex].selected && timeIndex > 0
             }">
-          <mat-form-field 
+          <mat-form-field
               [ngClass]="{ hidden: !dayAvailabilities[dayIndex].selected }"
               class="time">
             <mat-select
@@ -39,7 +39,9 @@
                 [fsFormRequired]="!!dayAvailabilities[dayIndex].selected"
                 [name]="'startDayTime' + timeIndex + day"
                 [(ngModel)]="time.start"
-                (ngModelChange)="changeStart(time)">
+                (ngModelChange)="changeStart(time)"
+                [validate]="validateTime"
+                [validateData]="{ day: dayIndex, timeIndex: timeIndex }">
               <mat-option
                   *ngFor="let time of startTimes"
                   [value]="time.seconds">
@@ -47,12 +49,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div 
+          <div
               class="to">
             to
           </div>
-          <mat-form-field 
-              class="time">
+          <mat-form-field class="time">
             <mat-select
                 #endSelect
                 (openedChange)="openedChangeEnd($event, endSelect, time)"
@@ -67,18 +68,18 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <a  
+          <a
               *ngIf="timeIndex === 0"
               class="action"
               (click)="timeAddClick(day)">
             <mat-icon>add</mat-icon>
           </a>
-          <a  
+          <a
               *ngIf="timeIndex !== 0"
               class="action"
               (click)="timeDeleteClick(day, timeIndex)">
             <mat-icon>delete_outline</mat-icon>
-          </a>      
+          </a>
         </div>
       </div>
     </div>
