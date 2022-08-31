@@ -222,20 +222,32 @@ export class FsAvailabilityComponent implements OnInit {
 
   public change(): void {
     const availabilities = this.dayAvailabilities
-    .filter((dayAvailabiliy) => dayAvailabiliy.selected)
-    .reduce((availabilities, dayAvailabiliy) => {
-      return [
-        ...availabilities,
-        ...dayAvailabiliy.times
-        .map((time) => {
-          return {
-            guid: time.guid,
-            day: dayAvailabiliy.day,
-            start: time.start,
-          };
-        }),
-      ];
-    }, []);
+      .filter((dayAvailabiliy) => dayAvailabiliy.selected)
+      .reduce((availabilities, dayAvailabiliy) => {
+        return [
+          ...availabilities,
+          ...dayAvailabiliy.times
+          .map((time) => {
+            return {
+              guid: time.guid,
+              day: dayAvailabiliy.day,
+              start: time.start,
+            };
+          }),
+        ];
+      }, [])
+      .sort((a, b) => {
+        if (a.start < b.start && a.day < b.day) {
+          return -1;
+        }
+
+        if (a.start > b.start && a.day > b.day) {
+          return 1;
+        }
+
+
+        return 0;
+      });
 
     this.availabilitiesChange.emit(availabilities);
     this._updateValidity();
