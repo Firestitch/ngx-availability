@@ -207,7 +207,10 @@ export class FsAvailabilityComponent implements OnInit {
   public timeAddClick(day): void {
     this.addTime(day);
     this.change();
-    this._updateValidity();
+
+    setTimeout(() => {
+      this._updateValidity();
+    })
   }
 
   public timeDeleteClick(day, index): void {
@@ -227,13 +230,14 @@ export class FsAvailabilityComponent implements OnInit {
         return [
           ...availabilities,
           ...dayAvailabiliy.times
-          .map((time) => {
-            return {
-              guid: time.guid,
-              day: dayAvailabiliy.day,
-              start: time.start,
-            };
-          }),
+            .map((time) => {
+              return {
+                guid: time.guid,
+                day: dayAvailabiliy.day,
+                start: time.start,
+                end: time.end,
+              };
+            }),
         ];
       }, [])
       .sort((a, b) => {
@@ -299,16 +303,16 @@ export class FsAvailabilityComponent implements OnInit {
     const times = this.dayAvailabilities[day].times;
     const currentTimeFrame = times[timeIndex];
 
-    if (!currentTimeFrame.start || !currentTimeFrame.end) { return }
+    // if (!currentTimeFrame.start || !currentTimeFrame.end) { return }
 
     const hasOverlaps = times.some((timeFrame, timeFrameIndex) => {
-      if (timeFrameIndex === timeIndex || !timeFrame.start || !timeFrame.end) { return false }
+      if (timeFrameIndex === timeIndex) { return false }
 
-      return currentTimeFrame.end >= timeFrame.start && timeFrame.end >= currentTimeFrame.start;
+      return currentTimeFrame.end > timeFrame.start && timeFrame.end > currentTimeFrame.start;
     })
 
     if (hasOverlaps) {
-      throw new Error('Conflict with another time slot');
+      throw new Error('Conflicting time slot');
     }
 
     return false;
