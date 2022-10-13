@@ -347,10 +347,10 @@ export class FsAvailabilityComponent implements OnInit {
       const timeStart = time.start;
       const timeEnd = time.end;
 
-      return (currentStart < timeStart && currentEnd < timeEnd) ||  
-        (currentStart > timeStart && currentEnd < timeEnd) ||  
-        (currentStart > timeStart && currentEnd > timeEnd) || 
-        (currentStart < timeStart && currentEnd > timeEnd);
+      return (currentStart < timeStart && currentEnd > timeStart) ||  // Straddle the start time
+        (currentStart > timeStart && currentEnd < timeEnd) ||  // Between start and end time
+        (currentStart < timeEnd && currentEnd > timeEnd) ||  // Straddle the end time 
+        (currentStart < timeStart && currentEnd > timeEnd); // Outside the start and end time
     })
 
     if (found) {
