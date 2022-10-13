@@ -98,7 +98,7 @@ export class FsAvailabilityComponent implements OnInit {
       const dayIndex = this.getDayIndex(availability.day);
       const dayAvailability = this.dayAvailabilities[dayIndex];
       if (!dayAvailability.times.length) {
-        this.addTime(availability.day);
+        this.addTime(availability.day, this.defaultStart, this.defaultEnd);
       }
     });
 
@@ -188,12 +188,12 @@ export class FsAvailabilityComponent implements OnInit {
     return this.dayAvailabilities[this.getDayIndex(day)];
   }
 
-  public addTime(day): void {
+  public addTime(day, defaultStart, defaultEnd): void {
     this.getDayAvailability(day)
     .times.push({
       guid: guid(),
-      start: this.defaultStart,
-      end: this.defaultEnd,
+      start: defaultStart,
+      end: defaultEnd,
     });
   }
 
@@ -208,8 +208,13 @@ export class FsAvailabilityComponent implements OnInit {
     this.change();
   }
 
-  public timeAddClick(day): void {
-    this.addTime(day);
+  public timeAddClick(dayIndex, day): void {
+    const maxEnd = this.dayAvailabilities[dayIndex].times
+      .reduce((max, time) => {
+        return time.end > max ? time.end : max;
+      }, 0);
+
+    this.addTime(day, maxEnd, this.defaultEnd);
     this.change();
 
     setTimeout(() => {
@@ -303,8 +308,8 @@ export class FsAvailabilityComponent implements OnInit {
     }
   }
 
-  public validateTime = (formControl, { day, timeIndex }) => {
-    const currentDayAvailability = this.dayAvailabilities[day];
+  public validateTime = (formControl, { day, dayIndex, timeIndex }) => {
+    const currentDayAvailability = this.dayAvailabilities[dayIndex];
     if(!currentDayAvailability.selected) {
       return true;
     }

@@ -44,7 +44,7 @@
                 [(ngModel)]="time.start"
                 (ngModelChange)="changeStart(time)"
                 [validate]="validateTime"
-                [validateData]="{ day: dayIndex, timeIndex: timeIndex }">
+                [validateData]="{ day: day, dayIndex: dayIndex, timeIndex: timeIndex }">
               <mat-option
                   *ngFor="let time of startTimes"
                   [value]="time.seconds">
@@ -87,7 +87,7 @@
               *ngIf="timeIndex === 0"
               class="action"
               mat-icon-button
-              (click)="timeAddClick(day)">
+              (click)="timeAddClick(dayIndex, day)">
             <mat-icon>add</mat-icon>
           </a>
           <a
