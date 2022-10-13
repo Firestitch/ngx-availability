@@ -11,10 +11,13 @@
         [(ngModel)]="dayAvailabilities[dayIndex].selected"
         (ngModelChange)="selectedClick()">
       </mat-checkbox>
-      <a
+      <a  
           class="day"
           (click)="dayClick(day)">
-        <ng-container *ngIf="!startDate">{{Days[day]}}</ng-container>
+        <ng-container *ngIf="!startDate">
+          <span class="full">{{Days[day]}}</span>
+          <span class="abr">{{DayAbrs[day]}}</span>
+        </ng-container>
         <div
             *ngIf="startDate"
             class="day-month">
@@ -60,23 +63,37 @@
                 [fsFormRequired]="!!dayAvailabilities[dayIndex].selected"
                 [name]="'endDayTime' + timeIndex + day"
                 [(ngModel)]="time.end"
+                [panelClass]="'next-day-panel-class'"
                 (ngModelChange)="changeEnd(time)">
               <mat-option
                   *ngFor="let time of endTimes"
                   [value]="time.seconds">
-                {{ time.label }}
-              </mat-option>
+                {{time.label}}
+              </mat-option> 
+              <mat-optgroup  
+                  [label]="'Next Day'">
+                <mat-option 
+                    *ngFor="let time of nextDayTimes" 
+                    [value]="time.seconds">
+                  {{time.label}}
+                </mat-option>
+              </mat-optgroup>
             </mat-select>
+            <mat-hint *ngIf="time.end > DaySeconds">
+              Next Day
+            </mat-hint>
           </mat-form-field>
           <a
               *ngIf="timeIndex === 0"
               class="action"
+              mat-icon-button
               (click)="timeAddClick(day)">
             <mat-icon>add</mat-icon>
           </a>
           <a
               *ngIf="timeIndex !== 0"
               class="action"
+              mat-icon-button
               (click)="timeDeleteClick(day, timeIndex)">
             <mat-icon>delete_outline</mat-icon>
           </a>

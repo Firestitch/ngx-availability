@@ -5,7 +5,7 @@ import { MatSelect } from '@angular/material/select';
 
 import { guid, index } from '@firestitch/common';
 
-import { addMinutes, format, getUnixTime, startOfWeek, addDays, isSameDay, endOfMonth } from 'date-fns';
+import { addMinutes, format, getUnixTime, startOfWeek, addDays, isSameDay, endOfMonth, addSeconds } from 'date-fns';
 
 import { Days } from '../../consts';
 import { Day } from '../../enums';
@@ -40,7 +40,9 @@ export class FsAvailabilityComponent implements OnInit {
 
   public startTimes = [];
   public endTimes = [];
+  public nextDayTimes = [];
   public Days = index(Days, 'value', 'name');
+  public DayAbrs = index(Days, 'value', 'abr');
   public days = [];
   public weekDays: any = [];
   public dayAvailabilities: {
@@ -144,10 +146,10 @@ export class FsAvailabilityComponent implements OnInit {
       });
   }
 
-  public generateTime(): any[] {
-    let date = new Date(null);
+  public generateTime(max, initial = 0): any[] {
+    let date = addSeconds(new Date(null), initial);
     const times = [];
-    while (getUnixTime(date) < this.DaySeconds) {
+    while (getUnixTime(date) < max) {
       const seconds = getUnixTime(date);
       if (seconds) {
         times.push({
@@ -168,16 +170,18 @@ export class FsAvailabilityComponent implements OnInit {
         seconds: 0,
         label: 'Anytime',
       },
-      ...this.generateTime()
+      ...this.generateTime(this.DaySeconds)
     ];
 
     this.endTimes = [
-      ...this.generateTime(),
+      ...this.generateTime(this.DaySeconds),
       {
-        seconds: this.DaySeconds - 1,
-        label: 'Anytime',
+        seconds: this.DaySeconds,
+        label: 'Midnight',
       },
     ];
+
+    this.nextDayTimes = this.generateTime(this.DaySeconds * 2, this.DaySeconds + (15 * 60));
   }
 
   public getDayAvailability(day) {
@@ -300,22 +304,60 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public validateTime = (formControl, { day, timeIndex }) => {
-    const times = this.dayAvailabilities[day].times;
-    const currentTimeFrame = times[timeIndex];
+    const currentDayAvailability = this.dayAvailabilities[day];
+    if(!currentDayAvailability.selected) {
+      return true;
+    }
 
-    // if (!currentTimeFrame.start || !currentTimeFrame.end) { return }
+    let currentTime: any = currentDayAvailability.times[timeIndex];
+    const times = this.dayAvailabilities
+      .filter((dayAvailability) => dayAvailability.selected)
+      .reduce((accum, dayAvailability) => {
+        return [
+          ...accum,
+          ...dayAvailability.times
+          .filter((time) => {
+            return currentTime !== time;
+          })
+          .map((time) => {
+            return {
+              ...time,
+              startHour: time.start / 60 / 60,
+              endHour: time.end / 60 / 60,
+              day: dayAvailability.day,
+              start: time.start + (dayAvailability.day * this.DaySeconds),
+              end: time.end + (dayAvailability.day * this.DaySeconds),
+            };
+          }),
+        ]
+      }, []);
 
-    const hasOverlaps = times.some((timeFrame, timeFrameIndex) => {
-      if (timeFrameIndex === timeIndex) { return false }
+    currentTime = {
+      ...currentTime,
+      startHour: currentTime.start / 60 / 60,
+      endHour: currentTime.end / 60 / 60,
+      day,
+      start: currentTime.start + (day * this.DaySeconds),
+      end: currentTime.end + (day * this.DaySeconds)
+    };
 
-      return currentTimeFrame.end > timeFrame.start && timeFrame.end > currentTimeFrame.start;
+    const found = times.find((time) => {
+      const currentStart = currentTime.start;
+      const currentEnd = currentTime.end;
+      const timeStart = time.start;
+      const timeEnd = time.end;
+
+      return (currentStart < timeStart && currentEnd < timeEnd) ||  
+        (currentStart > timeStart && currentEnd < timeEnd) ||  
+        (currentStart > timeStart && currentEnd > timeEnd) || 
+        (currentStart < timeStart && currentEnd > timeEnd);
     })
 
-    if (hasOverlaps) {
+    if (found) {
       throw new Error('Conflicting time slot');
     }
 
-    return false;
+    return true;
   }
 
   private _updateValidity(): void {

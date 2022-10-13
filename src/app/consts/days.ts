@@ -1,11 +1,11 @@
 import { Day } from '../enums';
 
 export const Days = [
-  { name: 'Sunday', value: Day.Sunday },
-  { name: 'Monday', value: Day.Monday },
-  { name: 'Tuesday', value: Day.Tuesday },
-  { name: 'Wednesday', value: Day.Wednesday },
-  { name: 'Thursday', value: Day.Thursday },
-  { name: 'Friday', value: Day.Friday },
-  { name: 'Saturday', value: Day.Saturday },
+  { name: 'Sunday', value: Day.Sunday, abr: 'Sun' },
+  { name: 'Monday', value: Day.Monday, abr: 'Mon' },
+  { name: 'Tuesday', value: Day.Tuesday, abr: 'Tue' },
+  { name: 'Wednesday', value: Day.Wednesday, abr: 'Wed' },
+  { name: 'Thursday', value: Day.Thursday, abr: 'Thu' },
+  { name: 'Friday', value: Day.Friday, abr: 'Fri' },
+  { name: 'Saturday', value: Day.Saturday, abr: 'Sat' },
 ];

@@ -1,40 +1,52 @@
 .availability {
   display: inline-block;
-  &:NOT(.has-date) {
+
+  &:not(.has-date) {
     .day {
-      width: 90px;
+      width: 80px;
     }
   }
-}
 
-.day {
-  color: inherit;
-  cursor: pointer;
-  user-select: none;
-  margin: 0 15px;
+  .day {
+    color: inherit;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 15px;
 
-  .day-month {
-    width: 30px;
-    text-align: center;
-
-    .day-number {
-      font-weight: bold;
-      font-size: 120%;
-      margin: 0;
+    .abr {
+      display: none;
     }
 
-    .day-name {
-      font-size: 90%;
+    .day-month {
+      width: 30px;
+      text-align: center;
+
+      .day-number {
+        font-weight: bold;
+        font-size: 120%;
+        margin: 0;
+      }
+
+      .day-name {
+        font-size: 90%;
+      }
+    }
+  }
+
+  ::ng-deep {
+    .mat-form-field-subscript-wrapper {
+      position: absolute;
+      width: 130px;
     }
   }
 }
 
 .time {
-  width: 100px;
+  width: 80px;
 }
 
 .to {
-  padding: 0 15px;
+  padding: 0 12px;
 }
 
 .hidden {
@@ -43,7 +55,7 @@
 
 .time-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 
   &.none {
     display: none;
@@ -55,6 +67,33 @@
   align-items: baseline;
 }
 
-.action {
-  margin-left: 10px;
+::ng-deep {
+  .next-day-panel-class {
+    .mat-optgroup-label {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #fff;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .availability {
+    &:not(.has-date) {
+      .day {
+        width: 25px;
+      }
+    }
+
+    .day {
+      .full {
+        display: none;
+      }
+      
+      .abr {
+        display: block;
+      }
+    }
+  }
 }

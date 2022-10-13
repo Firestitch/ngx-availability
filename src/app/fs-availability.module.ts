@@ -13,6 +13,7 @@ import { FsFormModule } from '@firestitch/form';
 
 import { FsAvailabilityComponent } from './components/availability/availability.component';
 import { FsMonthDividerComponent } from './components/month-divider/month-divider.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { FsMonthDividerComponent } from './components/month-divider/month-divide
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatButtonModule,
 
     FsFormModule,
     FsDatePickerModule,
