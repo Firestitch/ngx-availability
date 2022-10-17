@@ -11,7 +11,7 @@
         [(ngModel)]="dayAvailabilities[dayIndex].selected"
         (ngModelChange)="selectedClick()">
       </mat-checkbox>
-      <a  
+      <a
           class="day"
           (click)="dayClick(day)">
         <ng-container *ngIf="!startDate">
@@ -26,78 +26,28 @@
         </div>
       </a>
       <div>
-        <div
+        <ng-container *ngFor="let time of dayAvailabilities[dayIndex].times; let timeIndex = index">
+          <fs-availability-slot
             class="time-row"
-            *ngFor="let time of dayAvailabilities[dayIndex].times; let timeIndex = index"
             [ngClass]="{
               hidden: !dayAvailabilities[dayIndex].selected,
               none: !dayAvailabilities[dayIndex].selected && timeIndex > 0
-            }">
-          <mat-form-field
-              [ngClass]="{ hidden: !dayAvailabilities[dayIndex].selected }"
-              class="time">
-            <mat-select
-                #startSelect
-                (openedChange)="openedChangeStart($event, startSelect, time)"
-                [fsFormRequired]="!!dayAvailabilities[dayIndex].selected"
-                [name]="'startDayTime' + timeIndex + day"
-                [(ngModel)]="time.start"
-                (ngModelChange)="changeStart(time)"
-                [validate]="validateTime"
-                [validateData]="{ day: day, dayIndex: dayIndex, timeIndex: timeIndex }">
-              <mat-option
-                  *ngFor="let time of startTimes"
-                  [value]="time.seconds">
-                {{ time.label }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div
-              class="to">
-            to
-          </div>
-          <mat-form-field class="time">
-            <mat-select
-                #endSelect
-                (openedChange)="openedChangeEnd($event, endSelect, time)"
-                [fsFormRequired]="!!dayAvailabilities[dayIndex].selected"
-                [name]="'endDayTime' + timeIndex + day"
-                [(ngModel)]="time.end"
-                [panelClass]="'next-day-panel-class'"
-                (ngModelChange)="changeEnd(time)">
-              <mat-option
-                  *ngFor="let time of endTimes"
-                  [value]="time.seconds">
-                {{time.label}}
-              </mat-option> 
-              <mat-optgroup  
-                  [label]="'Next Day'">
-                <mat-option 
-                    *ngFor="let time of nextDayTimes" 
-                    [value]="time.seconds">
-                  {{time.label}}
-                </mat-option>
-              </mat-optgroup>
-            </mat-select>
-            <mat-hint *ngIf="time.end > DaySeconds">
-              Next Day
-            </mat-hint>
-          </mat-form-field>
-          <a
-              *ngIf="timeIndex === 0"
-              class="action"
-              mat-icon-button
-              (click)="timeAddClick(dayIndex, day)">
-            <mat-icon>add</mat-icon>
-          </a>
-          <a
-              *ngIf="timeIndex !== 0"
-              class="action"
-              mat-icon-button
-              (click)="timeDeleteClick(day, timeIndex)">
-            <mat-icon>delete_outline</mat-icon>
-          </a>
-        </div>
+            }"
+            [dayTimes]="dayTimes"
+            [nextDayTimes]="nextDayTimes"
+            [timeAvailability]="time"
+            [dayAvailability]="dayAvailabilities[dayIndex]"
+            [day]="day"
+            [dayIndex]="dayIndex"
+            [timeIndex]="timeIndex"
+            [validateTimeFn]="validateTime"
+            [defaultStartScrollTo]="defaultStartScrollTo"
+            [defaultEndScrollTo]="defaultEndScrollTo"
+            (change)="change()"
+            (timeAdd)="timeAddClick($event)"
+            (timeDelete)="timeDeleteClick($event)">
+          </fs-availability-slot>
+        </ng-container>
       </div>
     </div>
     <fs-month-divider

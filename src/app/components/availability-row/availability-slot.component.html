@@ -1,0 +1,63 @@
+<mat-form-field
+  class="time">
+  <mat-select
+    #startSelect
+    (openedChange)="openedChangeStart($event, startSelect, timeAvailability)"
+    [fsFormRequired]="!!dayAvailability.selected"
+    [name]="'startDayTime' + timeIndex + day"
+    [(ngModel)]="timeAvailability.start"
+    (ngModelChange)="changeStart(timeAvailability)"
+    [validate]="validateTimeFn"
+    [validateData]="{ day: day, dayIndex: dayIndex, timeIndex: timeIndex }">
+    <mat-option
+      *ngFor="let time of startTimes"
+      [value]="time.seconds">
+      {{ time.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<div
+  class="to">
+  to
+</div>
+<mat-form-field class="time">
+  <mat-select
+    #endSelect
+    (openedChange)="openedChangeEnd($event, endSelect, timeAvailability)"
+    [fsFormRequired]="!!dayAvailability.selected"
+    [name]="'endDayTime' + timeIndex + day"
+    [(ngModel)]="timeAvailability.end"
+    [panelClass]="'next-day-panel-class'"
+    (ngModelChange)="changeEnd(timeAvailability)">
+    <mat-option
+      *ngFor="let time of endTimes"
+      [value]="time.seconds">
+      {{time.label}}
+    </mat-option>
+    <mat-optgroup
+      [label]="'Next Day'">
+      <mat-option
+        *ngFor="let time of nextDayTimes"
+        [value]="time.seconds">
+        {{time.label}}
+      </mat-option>
+    </mat-optgroup>
+  </mat-select>
+  <mat-hint *ngIf="timeAvailability.end > daySeconds">
+    Next Day
+  </mat-hint>
+</mat-form-field>
+<a
+  *ngIf="timeIndex === 0"
+  class="action"
+  mat-icon-button
+  (click)="timeAddClick()">
+  <mat-icon>add</mat-icon>
+</a>
+<a
+  *ngIf="timeIndex !== 0"
+  class="action"
+  mat-icon-button
+  (click)="timeDeleteClick()">
+  <mat-icon>delete_outline</mat-icon>
+</a>

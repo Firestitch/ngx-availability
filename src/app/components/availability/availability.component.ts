@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 
-import { MatSelect } from '@angular/material/select';
-
 import { guid, index } from '@firestitch/common';
 
-import { addMinutes, format, getUnixTime, startOfWeek, addDays, isSameDay, endOfMonth, addSeconds } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay, endOfMonth } from 'date-fns';
 
 import { Days } from '../../consts';
 import { Day } from '../../enums';
 import { Availability } from '../../interfaces';
+import { IDayAvailability } from '../../interfaces/availability-day.interface';
+import { DaySeconds } from '../../consts/day-seconds';
+import { generateTime } from '../../helpers/generate-time';
+import { EightHours } from '../../consts/eight-hours';
+import { FifteenMinutes } from '../../consts/fifteen-minutes';
+import { IDayTime } from '../../interfaces/day-time.interface';
 
 
 @Component({
@@ -20,8 +24,6 @@ import { Availability } from '../../interfaces';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
 export class FsAvailabilityComponent implements OnInit {
-
-  readonly DaySeconds = 60 * 60 * 24;
 
   @Input() public availabilities: Availability[] = [];
   @Input() public defaultStart: number = null;
@@ -38,22 +40,16 @@ export class FsAvailabilityComponent implements OnInit {
     end?: number;
   }[]>();
 
-  public startTimes = [];
-  public endTimes = [];
-  public nextDayTimes = [];
   public Days = index(Days, 'value', 'name');
   public DayAbrs = index(Days, 'value', 'abr');
   public days = [];
   public weekDays: any = [];
-  public dayAvailabilities: {
-    day?: Day;
-    selected?: boolean;
-    times?: {
-      guid?: any,
-      start?: number;
-      end?: number;
-    }[],
-  }[] = [];
+  public dayAvailabilities: IDayAvailability[] = [];
+  public readonly dayTimes: IDayTime[] = generateTime(DaySeconds);
+  public readonly nextDayTimes: IDayTime[] = generateTime(
+    DaySeconds + EightHours + FifteenMinutes,
+    DaySeconds + FifteenMinutes,
+  );
 
   public constructor(
     private _form: NgForm,
@@ -62,7 +58,6 @@ export class FsAvailabilityComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initDays();
-    this.initTimes();
 
     if (this.startDate) {
       this.initWeekDays();
@@ -146,55 +141,21 @@ export class FsAvailabilityComponent implements OnInit {
       });
   }
 
-  public generateTime(max, initial = 0): any[] {
-    let date = addSeconds(new Date(null), initial);
-    const times = [];
-    while (getUnixTime(date) < max) {
-      const seconds = getUnixTime(date);
-      if (seconds) {
-        times.push({
-          seconds,
-          label: format(addMinutes(date, date.getTimezoneOffset()), 'h:mm aa'),
-        });
-      }
-
-      date = addMinutes(date, 15);
-    }
-
-    return times;
-  }
-
-  public initTimes(): void {
-    this.startTimes = [
-      {
-        seconds: 0,
-        label: 'Anytime',
-      },
-      ...this.generateTime(this.DaySeconds)
-    ];
-
-    this.endTimes = [
-      ...this.generateTime(this.DaySeconds),
-      {
-        seconds: this.DaySeconds,
-        label: 'Midnight',
-      },
-    ];
-
-    this.nextDayTimes = this.generateTime(this.DaySeconds * 2, this.DaySeconds + (15 * 60));
-  }
-
   public getDayAvailability(day) {
     return this.dayAvailabilities[this.getDayIndex(day)];
   }
 
   public addTime(day, defaultStart, defaultEnd): void {
+    if (defaultStart === DaySeconds && defaultEnd === DaySeconds) {
+      defaultEnd += FifteenMinutes;
+    }
+
     this.getDayAvailability(day)
-    .times.push({
-      guid: guid(),
-      start: defaultStart,
-      end: defaultEnd,
-    });
+      .times.push({
+        guid: guid(),
+        start: defaultStart,
+        end: defaultEnd,
+      });
   }
 
   public selectedClick(): void {
@@ -208,7 +169,7 @@ export class FsAvailabilityComponent implements OnInit {
     this.change();
   }
 
-  public timeAddClick(dayIndex, day): void {
+  public timeAddClick({ dayIndex, day }): void {
     const maxEnd = this.dayAvailabilities[dayIndex].times
       .reduce((max, time) => {
         return time.end > max ? time.end : max;
@@ -222,11 +183,11 @@ export class FsAvailabilityComponent implements OnInit {
     })
   }
 
-  public timeDeleteClick(day, index): void {
+  public timeDeleteClick({ day, timeIndex }): void {
     const dayAvailability = this.getDayAvailability(day);
     dayAvailability.times = dayAvailability.times
-    .filter((_, _index) => {
-      return index !== _index;
+    .filter((_, index) => {
+      return timeIndex !== index;
     });
 
     this.change();
@@ -266,51 +227,9 @@ export class FsAvailabilityComponent implements OnInit {
     this._updateValidity();
   }
 
-  public changeStart(time): void {
-    if (time.start > time.end) {
-      time.end = null;
-    }
-
-    this.change();
-  }
-
-  public changeEnd(time): void {
-    if (time.start > time.end) {
-      time.start = null;
-    }
-
-    this.change();
-  }
-
-  public openedChangeStart(opened, matSelect: MatSelect, time): void {
-    if (opened) {
-      if (!matSelect.value) {
-        const el = matSelect.panel.nativeElement
-        .querySelector(`[ng-reflect-value="${this.defaultStartScrollTo}"]`);
-
-        if (el) {
-          el.scrollIntoView({ behavior: 'auto', block: 'center' });
-        }
-      }
-    }
-  }
-
-  public openedChangeEnd(opened, matSelect: MatSelect, time): void {
-    if (opened) {
-      if (!matSelect.value) {
-        const el = matSelect.panel.nativeElement
-        .querySelector(`[ng-reflect-value="${time.start || this.defaultEndScrollTo}"]`);
-
-        if (el) {
-          el.scrollIntoView({ behavior: 'auto', block: 'center' });
-        }
-      }
-    }
-  }
-
   public validateTime = (formControl, { day, dayIndex, timeIndex }) => {
     const currentDayAvailability = this.dayAvailabilities[dayIndex];
-    if(!currentDayAvailability.selected) {
+    if (!currentDayAvailability.selected) {
       return true;
     }
 
@@ -330,8 +249,8 @@ export class FsAvailabilityComponent implements OnInit {
               startHour: time.start / 60 / 60,
               endHour: time.end / 60 / 60,
               day: dayAvailability.day,
-              start: time.start + (dayAvailability.day * this.DaySeconds),
-              end: time.end + (dayAvailability.day * this.DaySeconds),
+              start: time.start + (dayAvailability.day * DaySeconds),
+              end: time.end + (dayAvailability.day * DaySeconds),
             };
           }),
         ]
@@ -342,8 +261,8 @@ export class FsAvailabilityComponent implements OnInit {
       startHour: currentTime.start / 60 / 60,
       endHour: currentTime.end / 60 / 60,
       day,
-      start: currentTime.start + (day * this.DaySeconds),
-      end: currentTime.end + (day * this.DaySeconds)
+      start: currentTime.start + (day * DaySeconds),
+      end: currentTime.end + (day * DaySeconds)
     };
 
     const found = times.find((time) => {
@@ -354,8 +273,9 @@ export class FsAvailabilityComponent implements OnInit {
 
       return (currentStart < timeStart && currentEnd > timeStart) ||  // Straddle the start time
         (currentStart > timeStart && currentEnd < timeEnd) ||  // Between start and end time
-        (currentStart < timeEnd && currentEnd > timeEnd) ||  // Straddle the end time 
-        (currentStart < timeStart && currentEnd > timeEnd); // Outside the start and end time
+        (currentStart < timeEnd && currentEnd > timeEnd) ||  // Straddle the end time
+        (currentStart < timeStart && currentEnd > timeEnd) || // Outside the start and end time
+        (currentStart === timeStart && currentEnd === timeEnd);
     })
 
     if (found) {
