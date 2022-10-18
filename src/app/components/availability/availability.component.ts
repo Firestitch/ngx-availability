@@ -14,6 +14,7 @@ import { generateTime } from '../../helpers/generate-time';
 import { EightHours } from '../../consts/eight-hours';
 import { FifteenMinutes } from '../../consts/fifteen-minutes';
 import { IDayTime } from '../../interfaces/day-time.interface';
+import { timeSlotsIntersection } from '../../helpers/time-slots-intersection';
 
 
 @Component({
@@ -271,12 +272,9 @@ export class FsAvailabilityComponent implements OnInit {
       const timeStart = time.start;
       const timeEnd = time.end;
 
-      return (currentStart < timeStart && currentEnd > timeStart) ||  // Straddle the start time
-        (currentStart > timeStart && currentEnd < timeEnd) ||  // Between start and end time
-        (currentStart < timeEnd && currentEnd > timeEnd) ||  // Straddle the end time
-        (currentStart < timeStart && currentEnd > timeEnd) || // Outside the start and end time
-        (currentStart === timeStart && currentEnd === timeEnd);
-    })
+      return timeSlotsIntersection(currentStart, currentEnd, timeStart, timeEnd);
+
+    });
 
     if (found) {
       throw new Error('Conflicting time slot');
