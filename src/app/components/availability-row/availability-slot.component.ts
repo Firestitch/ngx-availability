@@ -91,7 +91,7 @@ export class FsAvailabilitySlotComponent implements OnInit {
         seconds: DaySeconds,
         label: 'Midnight',
       },
-    ].filter((time) => this.timeAvailability.start <= time.seconds);
+    ].filter((time) => this.timeAvailability.start < time.seconds);
 
     const eightHours = 60 * 60 * 8;
     const fifteenMinutes = (15 * 60);

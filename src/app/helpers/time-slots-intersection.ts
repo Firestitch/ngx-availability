@@ -49,7 +49,12 @@ export function timeSlotsIntersection(
 
   const x4 = inInterval(currentEnd, timeStart, timeEnd);
 
-  return x1 || x2 || x3 || x4;
+  /**
+   *  intervals are equal
+   */
+  const x5 = currentStart === timeStart && currentEnd === timeEnd;
+
+  return x1 || x2 || x3 || x4 || x5;
 }
 
 export function inInterval(x: number, intervalStart: number, intervalEnd: number): boolean {

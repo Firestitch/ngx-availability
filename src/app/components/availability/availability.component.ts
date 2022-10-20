@@ -147,6 +147,12 @@ export class FsAvailabilityComponent implements OnInit {
   }
 
   public addTime(day, defaultStart, defaultEnd): void {
+
+    if (defaultStart > DaySeconds) {
+      defaultStart = DaySeconds;
+      defaultEnd = DaySeconds;
+    }
+
     if (defaultStart === DaySeconds && defaultEnd === DaySeconds) {
       defaultEnd += FifteenMinutes;
     }
