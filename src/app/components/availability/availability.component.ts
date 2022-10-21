@@ -98,6 +98,10 @@ export class FsAvailabilityComponent implements OnInit {
       }
     });
 
+    setTimeout(() => {
+      this._updateValidity();
+    });
+
     this._cdRef.detectChanges();
   }
 
