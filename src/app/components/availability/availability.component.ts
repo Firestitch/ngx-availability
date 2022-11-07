@@ -246,6 +246,7 @@ export class FsAvailabilityComponent implements OnInit {
 
     let currentTime: any = currentDayAvailability.times[timeIndex];
     const times = this.dayAvailabilities
+      .map((day, dIndex) => ({...day, index: dIndex}))
       .filter((dayAvailability) => dayAvailability.selected)
       .reduce((accum, dayAvailability) => {
         return [
@@ -260,8 +261,8 @@ export class FsAvailabilityComponent implements OnInit {
               startHour: time.start / 60 / 60,
               endHour: time.end / 60 / 60,
               day: dayAvailability.day,
-              start: time.start + (dayAvailability.day * DaySeconds),
-              end: time.end + (dayAvailability.day * DaySeconds),
+              start: time.start + (dayAvailability.index * DaySeconds),
+              end: time.end + (dayAvailability.index * DaySeconds),
             };
           }),
         ]
@@ -272,8 +273,8 @@ export class FsAvailabilityComponent implements OnInit {
       startHour: currentTime.start / 60 / 60,
       endHour: currentTime.end / 60 / 60,
       day,
-      start: currentTime.start + (day * DaySeconds),
-      end: currentTime.end + (day * DaySeconds)
+      start: currentTime.start + (dayIndex * DaySeconds),
+      end: currentTime.end + (dayIndex * DaySeconds)
     };
 
     const found = times.find((time) => {
