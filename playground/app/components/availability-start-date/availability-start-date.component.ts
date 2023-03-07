@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Availability } from '@firestitch/availability';
 import { FsMessage } from '@firestitch/message';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -57,6 +58,8 @@ export class AvailabilityStartDateComponent {
 
   public submit = () => {
     this._message.success('Saved changes');
+
+    return of(true);
   }
 
   public availabilitiesChange(availabilities) {
