@@ -1,5 +1,5 @@
 <mat-form-field
-  class="time">
+  class="time form-field-padless-top">
   <mat-select
     #startSelect
     (openedChange)="openedChangeStart($event, startSelect, timeAvailability)"
@@ -20,7 +20,7 @@
   class="to">
   to
 </div>
-<mat-form-field class="time">
+<mat-form-field class="time form-field-padless-top">
   <mat-select
     #endSelect
     (openedChange)="openedChangeEnd($event, endSelect, timeAvailability)"

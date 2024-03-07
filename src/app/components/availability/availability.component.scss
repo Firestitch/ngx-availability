@@ -3,7 +3,7 @@
 
   &:not(.has-date) {
     .day {
-      width: 80px;
+      width: 100px;
     }
   }
 
@@ -53,6 +53,10 @@
 .day-row {
   display: flex;
   align-items: baseline;
+
+  + .day-row {
+    margin-top: 5px;
+  }
 }
 
 ::ng-deep {

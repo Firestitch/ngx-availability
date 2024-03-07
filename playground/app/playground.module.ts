@@ -19,6 +19,7 @@ import {
 import { AppComponent } from './app.component';
 import { AvailabilityComponent } from './components/availability';
 import { FsDatePickerModule } from '@firestitch/datepicker';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 
 const routes: Routes = [
@@ -47,6 +48,12 @@ const routes: Routes = [
     AvailabilityComponent,
     AvailabilityStartDateComponent,
   ],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { floatLabel: 'auto', appearance: 'outline' },
+    },
+  ]
 })
 export class PlaygroundModule {
 }

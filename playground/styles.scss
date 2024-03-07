@@ -1,9 +1,12 @@
-@use '~@firestitch/datepicker/styles' as fs-date-picker;
+@use '@firestitch/datepicker/styles' as fs-date-picker;
+@use '@firestitch/style/styles' as fs-style;
 
-@import '~@firestitch/component-tools/assets/playground.scss';
-@import '~@firestitch/message/styles';
-@import "~@firestitch/drawer/styles";
-@import '../src/app/styles.scss';
+@import '@firestitch/component-tools/assets/playground.scss';
+@import '@firestitch/message/styles';
+@import "@firestitch/drawer/styles";
 @import '@firestitch/form/styles';
 
+@import '../src/app/styles.scss';
+
 @include fs-drawer($mat-blue);
+@include fs-style.core();
