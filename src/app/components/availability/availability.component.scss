@@ -12,6 +12,7 @@
     cursor: pointer;
     user-select: none;
     margin: 0 15px;
+    font-size: 110%;
 
     .abr {
       display: none;
@@ -70,8 +71,16 @@
   }
 }
 
-.hidden {
-  visibility: hidden;
+.disabled {
+  ::ng-deep {
+    .action {
+      visibility: hidden;
+    }
+
+    .to {
+      opacity: .4;
+    }
+  }
 }
 
 

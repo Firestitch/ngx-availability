@@ -35,6 +35,9 @@ export class FsAvailabilitySlotComponent implements OnInit {
   public day: number;
 
   @Input()
+  public disabled: boolean;
+
+  @Input()
   public dayIndex: number;
 
   @Input()

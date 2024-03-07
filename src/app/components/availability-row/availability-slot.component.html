@@ -2,6 +2,7 @@
   class="time form-field-padless-top">
   <mat-select
     #startSelect
+    [disabled]="disabled"
     (openedChange)="openedChangeStart($event, startSelect, timeAvailability)"
     [fsFormRequired]="!!dayAvailability.selected"
     [name]="'startDayTime' + timeIndex + day"
@@ -23,6 +24,7 @@
 <mat-form-field class="time form-field-padless-top">
   <mat-select
     #endSelect
+    [disabled]="disabled"
     (openedChange)="openedChangeEnd($event, endSelect, timeAvailability)"
     [fsFormRequired]="!!dayAvailability.selected"
     [name]="'endDayTime' + timeIndex + day"

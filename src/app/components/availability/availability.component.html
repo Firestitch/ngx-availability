@@ -30,7 +30,7 @@
           <fs-availability-slot
             class="time-row"
             [ngClass]="{
-              hidden: !dayAvailabilities[dayIndex].selected,
+              disabled: !dayAvailabilities[dayIndex].selected,
               none: !dayAvailabilities[dayIndex].selected && timeIndex > 0
             }"
             [dayTimes]="dayTimes"
@@ -39,6 +39,7 @@
             [dayAvailability]="dayAvailabilities[dayIndex]"
             [day]="day"
             [dayIndex]="dayIndex"
+            [disabled]=" !dayAvailabilities[dayIndex].selected"
             [timeIndex]="timeIndex"
             [validateTimeFn]="validateTime"
             [defaultStartScrollTo]="defaultStartScrollTo"
