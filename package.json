@@ -51,7 +51,6 @@
     "@firestitch/dialog": "^14.0.0",
     "@firestitch/drawer": "^14.0.0",
     "@firestitch/example": "^14.0.0",
-    "@firestitch/exif-js": "^14.0.0",
     "@firestitch/file": "^14.0.0",
     "@firestitch/form": "^14.0.2",
     "@firestitch/iframe": "^14.0.0",
