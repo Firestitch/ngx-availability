@@ -49,17 +49,17 @@
     Next Day
   </mat-hint>
 </mat-form-field>
-<a
-  *ngIf="timeIndex === 0"
-  class="action"
-  mat-icon-button
-  (click)="timeAddClick()">
+<button
+    *ngIf="timeIndex === 0"
+    class="action"
+    mat-icon-button
+    (click)="timeAddClick()">
   <mat-icon>add</mat-icon>
-</a>
-<a
-  *ngIf="timeIndex !== 0"
-  class="action"
-  mat-icon-button
-  (click)="timeDeleteClick()">
+</button>
+<button
+    *ngIf="timeIndex !== 0"
+    class="action"
+    mat-icon-button
+    (click)="timeDeleteClick()">
   <mat-icon>delete_outline</mat-icon>
-</a>
+</button>
