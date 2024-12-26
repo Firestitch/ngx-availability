@@ -51,6 +51,7 @@
 </mat-form-field>
 <button
     *ngIf="timeIndex === 0"
+    type="button"
     class="action"
     mat-icon-button
     (click)="timeAddClick()">
@@ -58,6 +59,7 @@
 </button>
 <button
     *ngIf="timeIndex !== 0"
+    type="button"
     class="action"
     mat-icon-button
     (click)="timeDeleteClick()">
