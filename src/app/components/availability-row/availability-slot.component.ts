@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 
 import { MatSelect } from '@angular/material/select';
 
-import { IDayAvailability } from '../../interfaces/availability-day.interface';
-import { ITimeAvailability } from '../../interfaces/availability-time.interface';
 import { DaySeconds } from '../../consts/day-seconds';
 import { generateTime } from '../../helpers/generate-time';
+import { IDayAvailability } from '../../interfaces/availability-day.interface';
+import { ITimeAvailability } from '../../interfaces/availability-time.interface';
 import { IDayTime } from '../../interfaces/day-time.interface';
 
 
 @Component({
   selector: 'fs-availability-slot',
   templateUrl: './availability-slot.component.html',
-  styleUrls: [ './availability-slot.component.scss' ],
+  styleUrls: ['./availability-slot.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
 })
@@ -101,7 +101,7 @@ export class FsAvailabilitySlotComponent implements OnInit {
 
     this.nextDayTimes = generateTime(
       DaySeconds + eightHours + fifteenMinutes,
-      DaySeconds + (15 * 60)
+      DaySeconds + (15 * 60),
     );
   }
 
