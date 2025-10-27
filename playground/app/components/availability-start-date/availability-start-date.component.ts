@@ -2,12 +2,19 @@ import { Component } from '@angular/core';
 import { Availability } from '@firestitch/availability';
 import { FsMessage } from '@firestitch/message';
 import { of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { FsFormModule } from '@firestitch/form';
+import { FsAvailabilityComponent } from '../../../../src/app/components/availability/availability.component';
+import { MatButton } from '@angular/material/button';
+import { JsonPipe } from '@angular/common';
 
 
 @Component({
-  selector: 'app-availability-start-date',
-  templateUrl: './availability-start-date.component.html',
-  styleUrls: ['./availability-start-date.component.scss']
+    selector: 'app-availability-start-date',
+    templateUrl: './availability-start-date.component.html',
+    styleUrls: ['./availability-start-date.component.scss'],
+    standalone: true,
+    imports: [FormsModule, FsFormModule, FsAvailabilityComponent, MatButton, JsonPipe]
 })
 export class AvailabilityStartDateComponent {
 

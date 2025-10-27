@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 
 
 @Component({
-  selector: 'fs-month-divider',
-  templateUrl: './month-divider.component.html',
-  styleUrls: ['./month-divider.component.scss']
+    selector: 'fs-month-divider',
+    templateUrl: './month-divider.component.html',
+    styleUrls: ['./month-divider.component.scss'],
+    standalone: true
 })
 export class FsMonthDividerComponent implements OnInit {
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ControlContainer, NgForm } from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 
 import { MatSelect } from '@angular/material/select';
 
@@ -8,14 +8,31 @@ import { generateTime } from '../../helpers/generate-time';
 import { IDayAvailability } from '../../interfaces/availability-day.interface';
 import { ITimeAvailability } from '../../interfaces/availability-time.interface';
 import { IDayTime } from '../../interfaces/day-time.interface';
+import { MatFormField, MatHint } from '@angular/material/form-field';
+import { FsFormModule } from '@firestitch/form';
+import { MatOption, MatOptgroup } from '@angular/material/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 
 @Component({
-  selector: 'fs-availability-slot',
-  templateUrl: './availability-slot.component.html',
-  styleUrls: ['./availability-slot.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    selector: 'fs-availability-slot',
+    templateUrl: './availability-slot.component.html',
+    styleUrls: ['./availability-slot.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: true,
+    imports: [
+        MatFormField,
+        MatSelect,
+        FsFormModule,
+        FormsModule,
+        MatOption,
+        MatOptgroup,
+        MatHint,
+        MatIconButton,
+        MatIcon,
+    ],
 })
 export class FsAvailabilitySlotComponent implements OnInit {
 

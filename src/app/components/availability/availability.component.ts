@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ControlContainer, NgForm } from '@angular/forms';
+import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 
 import { guid, index } from '@firestitch/common';
 
@@ -15,14 +15,28 @@ import { EightHours } from '../../consts/eight-hours';
 import { FifteenMinutes } from '../../consts/fifteen-minutes';
 import { IDayTime } from '../../interfaces/day-time.interface';
 import { timeSlotsIntersection } from '../../helpers/time-slots-intersection';
+import { NgClass } from '@angular/common';
+import { FsMonthDividerComponent } from '../month-divider/month-divider.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FsFormModule } from '@firestitch/form';
+import { FsAvailabilitySlotComponent } from '../availability-row/availability-slot.component';
 
 
 @Component({
-  selector: 'fs-availability',
-  templateUrl: './availability.component.html',
-  styleUrls: [ './availability.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    selector: 'fs-availability',
+    templateUrl: './availability.component.html',
+    styleUrls: ['./availability.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: true,
+    imports: [
+        NgClass,
+        FsMonthDividerComponent,
+        MatCheckbox,
+        FormsModule,
+        FsFormModule,
+        FsAvailabilitySlotComponent,
+    ],
 })
 export class FsAvailabilityComponent implements OnInit {
 
