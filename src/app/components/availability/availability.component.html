@@ -1,32 +1,34 @@
 <div class="availability" [ngClass]="{ 'has-date': !!startDate }">
-  <ng-container *ngFor="let day of days; let dayIndex = index">
-    <fs-month-divider
-      *ngIf="startDate && dayIndex === 0"
-      [monthName]="weekDays[dayIndex].monthName">
-    </fs-month-divider>
+  @for (day of days; track day; let dayIndex = $index) {
+    @if (startDate && dayIndex === 0) {
+      <fs-month-divider
+        [monthName]="weekDays[dayIndex].monthName">
+      </fs-month-divider>
+    }
     <div
-        class="day-row">
+      class="day-row">
       <mat-checkbox
         [name]="'selectedDay' + day"
         [(ngModel)]="dayAvailabilities[dayIndex].selected"
         (ngModelChange)="selectedClick()">
       </mat-checkbox>
       <a
-          class="day"
-          (click)="dayClick(day)">
-        <ng-container *ngIf="!startDate">
+        class="day"
+        (click)="dayClick(day)">
+        @if (!startDate) {
           <span class="full">{{Days[day]}}</span>
           <span class="abr">{{DayAbrs[day]}}</span>
-        </ng-container>
-        <div
-            *ngIf="startDate"
+        }
+        @if (startDate) {
+          <div
             class="day-month">
-          <div class="day-number">{{ weekDays[dayIndex].dayOfMonth }}</div>
-          <div class="day-name">{{ weekDays[dayIndex].dayOfWeek }}</div>
-        </div>
+            <div class="day-number">{{ weekDays[dayIndex].dayOfMonth }}</div>
+            <div class="day-name">{{ weekDays[dayIndex].dayOfWeek }}</div>
+          </div>
+        }
       </a>
       <div>
-        <ng-container *ngFor="let time of dayAvailabilities[dayIndex].times; let timeIndex = index">
+        @for (time of dayAvailabilities[dayIndex].times; track time; let timeIndex = $index) {
           <fs-availability-slot
             class="time-row"
             [ngClass]="{
@@ -48,12 +50,13 @@
             (timeAdd)="timeAddClick($event)"
             (timeDelete)="timeDeleteClick($event)">
           </fs-availability-slot>
-        </ng-container>
+        }
       </div>
     </div>
-    <fs-month-divider
-      *ngIf="startDate && weekDays[dayIndex].isEndOfMonth && weekDays[dayIndex + 1]"
-      [monthName]="weekDays[dayIndex + 1].monthName">
-    </fs-month-divider>
-  </ng-container>
+    @if (startDate && weekDays[dayIndex].isEndOfMonth && weekDays[dayIndex + 1]) {
+      <fs-month-divider
+        [monthName]="weekDays[dayIndex + 1].monthName">
+      </fs-month-divider>
+    }
+  }
 </div>

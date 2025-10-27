@@ -10,11 +10,12 @@
     (ngModelChange)="changeStart(timeAvailability)"
     [validate]="validateTimeFn"
     [validateData]="{ day: day, dayIndex: dayIndex, timeIndex: timeIndex }">
-    <mat-option
-      *ngFor="let time of startTimes"
-      [value]="time.seconds">
-      {{ time.label }}
-    </mat-option>
+    @for (time of startTimes; track time) {
+      <mat-option
+        [value]="time.seconds">
+        {{ time.label }}
+      </mat-option>
+    }
   </mat-select>
 </mat-form-field>
 <div
@@ -31,37 +32,43 @@
     [(ngModel)]="timeAvailability.end"
     [panelClass]="'next-day-panel-class'"
     (ngModelChange)="changeEnd(timeAvailability)">
-    <mat-option
-      *ngFor="let time of endTimes"
-      [value]="time.seconds">
-      {{time.label}}
-    </mat-option>
-    <mat-optgroup
-      [label]="'Next Day'">
+    @for (time of endTimes; track time) {
       <mat-option
-        *ngFor="let time of nextDayTimes"
         [value]="time.seconds">
         {{time.label}}
       </mat-option>
+    }
+    <mat-optgroup
+      [label]="'Next Day'">
+      @for (time of nextDayTimes; track time) {
+        <mat-option
+          [value]="time.seconds">
+          {{time.label}}
+        </mat-option>
+      }
     </mat-optgroup>
   </mat-select>
-  <mat-hint *ngIf="timeAvailability.end > daySeconds">
-    Next Day
-  </mat-hint>
+  @if (timeAvailability.end > daySeconds) {
+    <mat-hint>
+      Next Day
+    </mat-hint>
+  }
 </mat-form-field>
-<button
-    *ngIf="timeIndex === 0"
+@if (timeIndex === 0) {
+  <button
     type="button"
     class="action"
     mat-icon-button
     (click)="timeAddClick()">
-  <mat-icon>add</mat-icon>
-</button>
-<button
-    *ngIf="timeIndex !== 0"
+    <mat-icon>add</mat-icon>
+  </button>
+}
+@if (timeIndex !== 0) {
+  <button
     type="button"
     class="action"
     mat-icon-button
     (click)="timeDeleteClick()">
-  <mat-icon>delete_outline</mat-icon>
-</button>
+    <mat-icon>delete_outline</mat-icon>
+  </button>
+}
