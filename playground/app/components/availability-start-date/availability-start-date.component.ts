@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Availability } from '@firestitch/availability';
 import { FsMessage } from '@firestitch/message';
 import { of } from 'rxjs';
@@ -17,6 +17,8 @@ import { JsonPipe } from '@angular/common';
     imports: [FormsModule, FsFormModule, FsAvailabilityComponent, MatButton, JsonPipe]
 })
 export class AvailabilityStartDateComponent {
+  private _message = inject(FsMessage);
+
 
   public availabilities: Availability[] = [
     {
@@ -58,10 +60,6 @@ export class AvailabilityStartDateComponent {
   ];
 
   public date = new Date(2022, 8, 26);
-
-  public constructor(
-    private _message: FsMessage,
-  ) {}
 
   public submit = () => {
     this._message.success('Saved changes');

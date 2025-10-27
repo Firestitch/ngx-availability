@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Input, Component, OnInit, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { ControlContainer, NgForm, FormsModule } from '@angular/forms';
 
 import { guid, index } from '@firestitch/common';
@@ -39,6 +39,9 @@ import { FsAvailabilitySlotComponent } from '../availability-row/availability-sl
     ],
 })
 export class FsAvailabilityComponent implements OnInit {
+  private _form = inject(NgForm);
+  private _cdRef = inject(ChangeDetectorRef);
+
 
   @Input() public availabilities: Availability[] = [];
   @Input() public defaultStart: number = null;
@@ -65,11 +68,6 @@ export class FsAvailabilityComponent implements OnInit {
     DaySeconds + EightHours + FifteenMinutes,
     DaySeconds + FifteenMinutes,
   );
-
-  public constructor(
-    private _form: NgForm,
-    private _cdRef: ChangeDetectorRef,
-  ) { }
 
   public ngOnInit(): void {
     this.initDays();
